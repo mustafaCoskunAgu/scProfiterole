@@ -69,3 +69,12 @@ Scikit-Learn          : 1.7.2
 SymPy                 : 1.14.0
 Running on            : CPU
 ========================================**
+
+
+
+Colab Reproducibilty:
+
+Please refer to
+https://github.com/mustafaCoskunAgu/scProfiterole/blob/main/scProfiterole.ipynb
+
+You may change the Encoder via "Kernel" in line 154 of MyTutorial2.py 
