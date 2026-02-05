@@ -21,7 +21,7 @@ from peptide_uncertainty_estimation.peptide_uncertainty_utils import*
 from utils import *
 #from model import*
 from model2 import*
-from ChebnetII_pro import*
+#from ChebnetII_pro import*
 from prototype_loss import*
 from train_stage1 import*
 from train_stage2 import*
@@ -309,4 +309,5 @@ plt.show()
 # plt.xticks([])
 # plt.yticks([])
 # plt.title('scPROTEIN') 
+
 
