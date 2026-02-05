@@ -19,8 +19,8 @@ from peptide_uncertainty_estimation.multi_task_heteroscedastic_regression_model 
 from peptide_uncertainty_estimation.peptide_uncertainty_train import*
 from peptide_uncertainty_estimation.peptide_uncertainty_utils import*
 from utils import *
-from model import*
-#from model2 import*
+#from model import*
+from model2 import*
 from ChebnetII_pro import*
 from prototype_loss import*
 from train_stage1 import*
@@ -307,4 +307,5 @@ plt.show()
 # plt.xticks([])
 # plt.yticks([])
 # plt.title('scPROTEIN') 
+
 
