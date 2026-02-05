@@ -2154,7 +2154,8 @@ class HeatKernelConv(MessagePassing):
         )
         
         # 6. Create identity matrix I
-        I = torch.eye(num_nodes, dtype=x.dtype)
+        #I = torch.eye(num_nodes, dtype=x.dtype)
+		I = torch.eye(A_norm.size(0), device=A_norm.device)
         
         # 7. Compute Laplacian: L = I - A_norm
         L = I - A_norm
