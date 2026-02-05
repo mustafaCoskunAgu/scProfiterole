@@ -45,7 +45,7 @@ import warnings
 parser = argparse.ArgumentParser()
 parser.add_argument("--stage1", type=bool, default=True, help='if scPROTEIN starts from stage1')
 parser.add_argument("--learning_rate", type=float, default=1e-3, help='learning rate')
-parser.add_argument("--num_hidden", type=int, default=64, help='hidden dimension') 
+parser.add_argument("--num_hidden", type=int, default=400, help='hidden dimension') 
 parser.add_argument("--num_proj_hidden", type=int, default=256, help='dimension of projection head')
 parser.add_argument("--activation", type=str, default='prelu', help='activation function') 
 parser.add_argument("--num_layers", type=int, default=6, help='num of GCN layers')
@@ -146,13 +146,15 @@ encoder = HeatKernel_Encoder(
     out_channels=args.num_hidden,  # embedding dimension
     activation=F.relu,
     K=3,            # number of layers
-    hidden_dim=64,  # hidden dimension
+    hidden_dim=400,  # hidden dimension
     dropout=0.5,
-    heat_K=12,       # truncation depth for heat kernel
+    heat_K=6,       # truncation depth for heat kernel
     t=2.0,           # diffusion time
-    method = 'RW' # Propagation technique
+    method = 'RW', # Propagation technique
+    kernel = 'RWR_T'
 )
 
+#encoder = Encoder(data.num_features, args.num_hidden, activation, k=args.num_layers).to(device)
 
 # encoder = BetaKernel_Encoder(in_channels=data.num_features,
 #                            out_channels=args.num_hidden,
@@ -220,7 +222,7 @@ def purity_score(y_true, y_pred):
 
 
 def dimension_reduce(embedding):
-    X_trans_PCA = PCA(n_components=50, random_state=seed).fit_transform(embedding)  
+    X_trans_PCA = PCA(n_components=30, random_state=seed).fit_transform(embedding)  
     X_trans = TSNE(n_components=2,random_state=seed).fit_transform(X_trans_PCA)
     return X_trans
 
@@ -307,5 +309,4 @@ plt.show()
 # plt.xticks([])
 # plt.yticks([])
 # plt.title('scPROTEIN') 
-
 
