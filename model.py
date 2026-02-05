@@ -1114,7 +1114,7 @@ def f0_betaL(x):
     return (K + 1) * (1 - x / 2) ** K
 
 
-def f0_beta(x, K = 24):
+def f0_beta(x, K = 6):
     """
     Compute the Beta kernel polynomial f_0(x) for a given degree K.
     f_0(x) = (K+1) * (1 - x/2)^K
@@ -2063,7 +2063,7 @@ class HeatKernelConv(MessagePassing):
         H = sum_{k=0}^K c_k * S^k X
     where S = D^{-1/2} A D^{-1/2}, and c_k = e^{-t} * t^k / k!
     """
-    def __init__(self, in_channels, out_channels, K=5, t=3.0, method = 'Heat'):
+    def __init__(self, in_channels, out_channels, K=5, t=3.0, method = 'Heat', kernel = 'Heat_I'):
         super().__init__(aggr='add')
         self.lin = nn.Linear(in_channels, out_channels)
         self.K = K
@@ -2072,6 +2072,7 @@ class HeatKernelConv(MessagePassing):
         self.simple = True
         self.learn = True
         self.Threeterm = False
+        self.kernel = kernel
         assert method in ['Heat', 'PPR', 'RW', 'Complex', 'Beta']
         if method == 'Heat':
         # Precompute coefficients
@@ -2095,23 +2096,29 @@ class HeatKernelConv(MessagePassing):
             print(coeffs )
             self.simple = True
         elif method == 'RW':
-            print("Arnoldi G0 is running")
             lower = -.9
             upper = .9
-            # raw = calculate_theta2(self.K)
-            # arr = np.array(raw)  # shape (K+1, K+1)
-            # coeffs = list(arr.mean(axis=0).tolist())  # single 1D coeff vector length K+1
-            # #coeffs = calculate_theta2(self.K+1)
-            coeffs =  compare_fit_panelA(g_low_heat, 'Chebyshev', True, self.Threeterm,self.K+1, lower, upper)
+            assert kernel in ['Heat_I', 'Heat_A', 'RWR_T', 'RWR_I', 'Beta_D','Random']
+            print("Kernel is ", kernel)
+            if kernel == 'Heat_I':
+                coeffs =  compare_fit_panelA(g_low_heat, 'Chebyshev', False, self.Threeterm,self.K+1, lower, upper) # Vadermonde indicator is False here
+            elif kernel == 'RWR_I':
+                coeffs =  compare_fit_panelA(g_0, 'Chebyshev', False, self.Threeterm,self.K+1, lower, upper) # Vadermonde indicator is False here               
+            elif kernel == 'Heat_A':
+                coeffs =  compare_fit_panelA(g_low_heat, 'Chebyshev', True, self.Threeterm,self.K+1, lower, upper) # Vadermonde indicator is True here
+            elif kernel == 'RWR_T':
+                alpha = 0.9
+                coeffs = [( alpha** k) for k in range(K + 1)]            
+            elif kernel == 'Random':
+                coeffs = np.random.rand(K + 1)
+                coeffs = coeffs / coeffs.sum()
+                #coeffs =  compare_fit_panelA(g_0, 'Chebyshev', True, self.Threeterm,self.K+1, lower, upper) # Vadermonde indicator is True here
+            elif kernel == 'Beta_D':
+                coeffs =  compare_fit_panelA(f0_beta, 'Chebyshev', True, self.Threeterm,self.K+1, lower, upper) # Vadermonde indicator is True here
+            
             reversed_arr = coeffs[::-1].copy()
             coeffs = reversed_arr
-            #print(coeffs)
-            #coeffs = [4,-6,3,-0.5]
-            #print(coeffs)
-            # theta_list = calculate_theta2_normalized(self.K)
-            
-            
-            # coeffs = theta_list[0]
+
             print(coeffs)
             if (self.Threeterm):
                 print("Do not change coeffs")
@@ -2269,7 +2276,7 @@ class HeatKernelConv(MessagePassing):
 class HeatKernel_Encoder(nn.Module):
     def __init__(self, in_channels: int, out_channels: int, activation=F.relu,
                  K: int = 2, hidden_dim: int = 64, dropout: float = 0.5,
-                 heat_K: int = 5, t: float = 3.0, method: str = 'Heat'):
+                 heat_K: int = 5, t: float = 3.0, method: str = 'Heat', kernel: str = 'Heat_I'):
         """
         Heat Kernel Encoder with multiple layers, similar to GPRGCN_Encoder.
 
@@ -2291,10 +2298,10 @@ class HeatKernel_Encoder(nn.Module):
 
         # Define heat kernel layers
         self.conv = nn.ModuleList()
-        self.conv.append(HeatKernelConv(in_channels, hidden_dim, K=heat_K, t=t, method = method))  # first layer
+        self.conv.append(HeatKernelConv(in_channels, hidden_dim, K=heat_K, t=t, method = method,kernel=kernel))  # first layer
         for _ in range(1, K - 1):
-            self.conv.append(HeatKernelConv(hidden_dim, hidden_dim, K=heat_K, t=t, method = method))  # hidden layers
-        self.conv.append(HeatKernelConv(hidden_dim, out_channels, K=heat_K, t=t, method = method))  # output layer
+            self.conv.append(HeatKernelConv(hidden_dim, hidden_dim, K=heat_K, t=t, method = method,kernel=kernel))  # hidden layers
+        self.conv.append(HeatKernelConv(hidden_dim, out_channels, K=heat_K, t=t, method = method,kernel=kernel))  # output layer
 
     def reset_parameters(self):
         for layer in self.conv:
