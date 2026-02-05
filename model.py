@@ -9,15 +9,15 @@ from utils import *
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import dgl.function as fn
+#import dgl.function as fn
 import math
-import dgl
+#import dgl
 import sympy
 import scipy
 import numpy as np
 from torch import nn
 from torch.nn import init
-from dgl.nn.pytorch import GraphConv, EdgeWeightNorm, ChebConv, GATConv, HeteroGraphConv
+#from dgl.nn.pytorch import GraphConv, EdgeWeightNorm, ChebConv, GATConv, HeteroGraphConv
 
 '''
 part of code is borrowed from https://github.com/CRIPAC-DIG/GRACE
