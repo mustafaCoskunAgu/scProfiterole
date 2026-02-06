@@ -14,10 +14,10 @@ from sklearn import metrics
 from sklearn.metrics import silhouette_score,adjusted_rand_score,normalized_mutual_info_score
 from sklearn.metrics.cluster import contingency_matrix
 
-from peptide_uncertainty_estimation.multi_task_heteroscedastic_regression_loss import *
-from peptide_uncertainty_estimation.multi_task_heteroscedastic_regression_model import*
-from peptide_uncertainty_estimation.peptide_uncertainty_train import*
-from peptide_uncertainty_estimation.peptide_uncertainty_utils import*
+#from peptide_uncertainty_estimation.multi_task_heteroscedastic_regression_loss import *
+#from peptide_uncertainty_estimation.multi_task_heteroscedastic_regression_model import*
+#from peptide_uncertainty_estimation.peptide_uncertainty_train import*
+#from peptide_uncertainty_estimation.peptide_uncertainty_utils import*
 from utils import *
 #from model import*
 from model2 import*
@@ -309,5 +309,6 @@ plt.show()
 # plt.xticks([])
 # plt.yticks([])
 # plt.title('scPROTEIN') 
+
 
 
