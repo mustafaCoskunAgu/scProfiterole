@@ -110,14 +110,25 @@ activation = nn.PReLU() if args.activation == 'prelu' else F.relu
 
 
 encoder = HeatKernel_Encoder(
+    
     in_channels=data.num_features,
+    
     out_channels=args.num_hidden,  # embedding dimension
+    
     activation=F.relu,
+    
     K=3,            # number of layers
+    
     hidden_dim=64,  # hidden dimension
+    
     dropout=0.5,
+    
     heat_K=12,       # truncation depth for heat kernel
+    
     t=3.0,           # diffusion time
+    
     method = 'RW', # Propagation technique
+    
     kernel = 'Heat_A'
+
 )
