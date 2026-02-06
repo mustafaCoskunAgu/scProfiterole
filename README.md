@@ -72,7 +72,7 @@ Running on            : CPU
 
 
 
-Colab Reproducibilty:
+# --- Colab Reproducibility ---
 
 Please refer to
 https://github.com/mustafaCoskunAgu/scProfiterole/blob/main/scProfiterole.ipynb
