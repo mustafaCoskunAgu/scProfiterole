@@ -1353,7 +1353,7 @@ def compare_fit_panelA(f, sampling, Vandermonde, Threeterm,degree, x0, x1, hyper
     print ('Calling Monimal as default\n')
     x = m_polynomial_zeros(x0, x1, degree)
     
-   return compare_fitA(f, x, Vandermonde,Threeterm, x0,x1)
+   return compare_fitA(f, x, Vandermonde,Threeterm, x0,x1,hyperparam)
 
 
 def compare_fit_panelAImplicit(y, Vandermonde, Threeterm,degree, x0, x1,zoom=False):
