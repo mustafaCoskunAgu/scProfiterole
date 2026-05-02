@@ -1160,8 +1160,8 @@ def g_band_pass(x):
 
 def g_low_pass(x):
     return np.exp(-5*x**2)
-def g_high_pass(x):
-    return 1-np.exp(-0.1*x)
+def g_high_pass(x,t):
+    return 1-np.exp(-t*x**2)
 
 def g_mix_high_low(x):
     return (1/(1-x))*(1-np.exp(-5*x**2))
@@ -2098,7 +2098,7 @@ class HeatKernelConv(MessagePassing):
         elif method == 'RW':
             lower = -.9
             upper = .9
-            assert kernel in ['Heat_I', 'Heat_A', 'RWR_T', 'RWR_I', 'Beta_D','Random']
+            assert kernel in ['Heat_I', 'Heat_A', 'RWR_T', 'RWR_I', 'Beta_D','Random','High_P']
             print("Kernel is ", kernel)
             if kernel == 'Heat_I':
                 coeffs =  compare_fit_panelA(g_low_heat, 'Chebyshev', False, self.Threeterm,self.K+1, lower, upper,self.t) # Vadermonde indicator is False here
@@ -2106,6 +2106,9 @@ class HeatKernelConv(MessagePassing):
                 coeffs =  compare_fit_panelA(g_0, 'Chebyshev', False, self.Threeterm,self.K+1, lower, upper,self.t) # Vadermonde indicator is False here               
             elif kernel == 'Heat_A':
                 coeffs =  compare_fit_panelA(g_low_heat, 'Chebyshev', True, self.Threeterm,self.K+1, lower, upper,self.t) # Vadermonde indicator is True here
+            elif kernel == 'High_P':
+                self.simple = False
+                coeffs =  compare_fit_panelA(g_high_pass, 'Chebyshev', True, self.Threeterm,self.K+1, 0.0001, 2.000,self.t) # Vadermonde indicator is True here
             elif kernel == 'RWR_T':
                 alpha = self.t
                 coeffs = [( alpha** k) for k in range(K + 1)]            
