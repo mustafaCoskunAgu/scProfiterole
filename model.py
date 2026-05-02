@@ -1317,7 +1317,7 @@ def poylfitA_Cheby(x,y,n,a,b):
     return d, H
 
 def compare_fitA(f, x, Vander, Threeterm,x0, x1,hyperparam):
-  y = f(x,hyperpram)
+  y = f(x,hyperparam)
   n = x.size-1
 
   if(Vander):
