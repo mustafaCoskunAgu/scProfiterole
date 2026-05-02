@@ -1084,7 +1084,7 @@ def g_fullRWR(x):
     #return x/(1-x) - x**2 
 
 
-def g_0(x, alpha  = 0.9):
+def g_0(x, alpha):
     return (alpha)/(1 - x) 
 def g_1(x):
     return (1)/(1 - x)
@@ -1132,7 +1132,7 @@ def g_appRWR(x,Ksteps):
     return 0.1*sum
 def g_hub_promoting(x):
     return 1/(1+3*x)**2
-def g_low_heat(x,t = 2.0):
+def g_low_heat(x,t):
     return np.exp(-t + t*x)
 def g_high_heat(x):
     return 1- np.exp(-2*x)
@@ -1316,8 +1316,8 @@ def poylfitA_Cheby(x,y,n,a,b):
     d = np.linalg.solve(newQ.astype(np.float64), y.astype(np.float64))
     return d, H
 
-def compare_fitA(f, x, Vander, Threeterm,x0, x1):
-  y = f(x)
+def compare_fitA(f, x, Vander, Threeterm,x0, x1,myt):
+  y = f(x,myt)
   n = x.size-1
 
   if(Vander):
@@ -1336,7 +1336,7 @@ def compare_fitA(f, x, Vander, Threeterm,x0, x1):
 
 def m_polynomial_zeros (x0, x1, n):
     return  np.linspace(x0, x1,n)
-def compare_fit_panelA(f, sampling, Vandermonde, Threeterm,degree, x0, x1,zoom=False):
+def compare_fit_panelA(f, sampling, Vandermonde, Threeterm,degree, x0, x1,myt,zoom=False):
    # Male equedistance
    #x = np.linspace(x0, x1,10)
    
@@ -1353,7 +1353,7 @@ def compare_fit_panelA(f, sampling, Vandermonde, Threeterm,degree, x0, x1,zoom=F
     print ('Calling Monimal as default\n')
     x = m_polynomial_zeros(x0, x1, degree)
     
-   return compare_fitA(f, x, Vandermonde,Threeterm, x0,x1)
+   return compare_fitA(f, x, Vandermonde,Threeterm, x0,x1,myt)
 
 
 def compare_fit_panelAImplicit(y, Vandermonde, Threeterm,degree, x0, x1,zoom=False):
@@ -2101,13 +2101,13 @@ class HeatKernelConv(MessagePassing):
             assert kernel in ['Heat_I', 'Heat_A', 'RWR_T', 'RWR_I', 'Beta_D','Random']
             print("Kernel is ", kernel)
             if kernel == 'Heat_I':
-                coeffs =  compare_fit_panelA(g_low_heat, 'Chebyshev', False, self.Threeterm,self.K+1, lower, upper) # Vadermonde indicator is False here
+                coeffs =  compare_fit_panelA(g_low_heat, 'Chebyshev', False, self.Threeterm,self.K+1, lower, upper,self.t) # Vadermonde indicator is False here
             elif kernel == 'RWR_I':
-                coeffs =  compare_fit_panelA(g_0, 'Chebyshev', False, self.Threeterm,self.K+1, lower, upper) # Vadermonde indicator is False here               
+                coeffs =  compare_fit_panelA(g_0, 'Chebyshev', False, self.Threeterm,self.K+1, lower, upper,self.t) # Vadermonde indicator is False here               
             elif kernel == 'Heat_A':
-                coeffs =  compare_fit_panelA(g_low_heat, 'Chebyshev', True, self.Threeterm,self.K+1, lower, upper) # Vadermonde indicator is True here
+                coeffs =  compare_fit_panelA(g_low_heat, 'Chebyshev', True, self.Threeterm,self.K+1, lower, upper,self.t) # Vadermonde indicator is True here
             elif kernel == 'RWR_T':
-                alpha = 0.9
+                alpha = self.t
                 coeffs = [( alpha** k) for k in range(K + 1)]            
             elif kernel == 'Random':
                 coeffs = np.random.rand(K + 1)
@@ -2155,7 +2155,7 @@ class HeatKernelConv(MessagePassing):
         
         # 6. Create identity matrix I
         #I = torch.eye(num_nodes, dtype=x.dtype)
-		I = torch.eye(A_norm.size(0), device=A_norm.device)
+        I = torch.eye(A_norm.size(0), device=A_norm.device)
         
         # 7. Compute Laplacian: L = I - A_norm
         L = I - A_norm
