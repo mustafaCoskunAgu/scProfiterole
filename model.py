@@ -1161,7 +1161,7 @@ def g_band_pass(x):
 def g_low_pass(x):
     return np.exp(-5*x**2)
 def g_high_pass(x,t):
-    return 1-np.exp(-t*x**2)
+    return 1-np.exp(-t*x)
 
 def g_mix_high_low(x):
     return (1/(1-x))*(1-np.exp(-5*x**2))
