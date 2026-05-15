@@ -2102,16 +2102,16 @@ class HeatKernelConv(MessagePassing):
             print("Kernel is ", kernel)
             if kernel == 'Heat_I':
                 coeffs =  compare_fit_panelA(g_low_heat, 'Chebyshev', False, self.Threeterm,self.K+1, lower, upper,self.t) # Vadermonde indicator is False here
-			if kernel == 'High_I':
-				self.simple = False
-                coeffs =  compare_fit_panelA(g_high_heat, 'Chebyshev', False, self.Threeterm,self.K+1, 0.001, 2.000,self.t) # Vadermonde indicator is False here
+            if kernel == 'High_I':
+              self.simple = False
+              coeffs =  compare_fit_panelA(g_high_heat, 'Chebyshev', False, self.Threeterm,self.K+1, 0.001, 2.000,self.t) # Vadermonde indicator is False here
             elif kernel == 'RWR_I':
                 coeffs =  compare_fit_panelA(g_0, 'Chebyshev', False, self.Threeterm,self.K+1, lower, upper,self.t) # Vadermonde indicator is False here               
             elif kernel == 'Heat_A':
                 coeffs =  compare_fit_panelA(g_low_heat, 'Chebyshev', True, self.Threeterm,self.K+1, lower, upper,self.t) # Vadermonde indicator is True here
-			elif kernel == 'High_A':
-				self.simple = False
-                coeffs =  compare_fit_panelA(g_high_heat, 'Chebyshev', True, self.Threeterm,self.K+1, 0.001, 2.000,self.t) # Vadermonde indicator is True here
+            elif kernel == 'High_A':
+              self.simple = False
+              coeffs =  compare_fit_panelA(g_high_heat, 'Chebyshev', True, self.Threeterm,self.K+1, 0.001, 2.000,self.t) # Vadermonde indicator is True here
             elif kernel == 'RWR_T':
                 alpha = self.t
                 coeffs = [( alpha** k) for k in range(K + 1)]            
