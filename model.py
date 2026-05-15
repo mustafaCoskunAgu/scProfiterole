@@ -1134,8 +1134,8 @@ def g_hub_promoting(x):
     return 1/(1+3*x)**2
 def g_low_heat(x,t):
     return np.exp(-t + t*x)
-def g_high_heat(x):
-    return 1- np.exp(-2*x)
+def g_high_heat(x,t):
+    return 1- np.exp(-t +t*x)
 def g_heat(x,Ksteps):
     t = 5
     sum = 0
