@@ -2103,8 +2103,7 @@ class HeatKernelConv(MessagePassing):
             if kernel == 'Heat_I':
                 coeffs =  compare_fit_panelA(g_low_heat, 'Chebyshev', False, self.Threeterm,self.K+1, lower, upper,self.t) # Vadermonde indicator is False here
             if kernel == 'High_I':
-              self.simple = False
-              coeffs =  compare_fit_panelA(g_high_heat, 'Chebyshev', False, self.Threeterm,self.K+1, 0.001, 2.000,self.t) # Vadermonde indicator is False here
+              coeffs =  compare_fit_panelA(g_high_heat, 'Chebyshev', False, self.Threeterm,self.K+1, lower, upper,self.t) # Vadermonde indicator is False here
             elif kernel == 'RWR_I':
                 coeffs =  compare_fit_panelA(g_0, 'Chebyshev', False, self.Threeterm,self.K+1, lower, upper,self.t) # Vadermonde indicator is False here               
             elif kernel == 'Heat_A':
